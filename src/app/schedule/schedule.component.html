@@ -1,0 +1,45 @@
+<hr>
+
+<table>
+  <thead>
+      <tr>
+          <th>Nr</th>
+          <th>Date</th>
+          <th>Cover part</th>
+          <th>Interest part</th>
+          <th>Summ</th>
+          <th>Credit left</th>
+        </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let payment of schedule">
+          <ng-container *ngIf="service.isScheduledPayment(payment); else notScheduled">
+              <td>{{payment.paymentNr+1}}</td>
+              <td>{{formatDate(payment.date)}}</td>
+              <td>{{payment.cover}}</td>
+              <td>{{payment.interest}}</td>
+              <td>{{payment.sum}}</td>
+              <td>{{payment.left}}</td>
+          </ng-container>
+          <ng-template #notScheduled>
+              <td>(ret)</td>
+              <td>{{formatDate(payment.date)}}</td>
+              <td>{{payment.cover}}</td>
+              <td></td>
+              <td>{{payment.cover}}</td>
+              <td>{{payment.left}}</td>
+          </ng-template>    
+        </tr>
+  </tbody>
+  <tfoot>
+      <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>{{interestTotal}}</td>
+          <td>{{total}}</td>
+          <td></td>
+        </tr>
+  </tfoot>
+  
+</table>

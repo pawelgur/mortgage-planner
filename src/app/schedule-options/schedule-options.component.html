@@ -1,0 +1,17 @@
+<form #form="ngForm">
+  <label for="startDate">Start date:</label>
+  <input [(ngModel)]="schedule.startDate" type="text" id="startDate" name="startDate"><br>
+
+  <label for="paymentDay">Payment day:</label>
+  <input [(ngModel)]="schedule.paymentDay"  type="number" name="paymentDay" id="paymentDay">eur<br>
+
+  <label for="sum">Sum:</label>
+  <input [(ngModel)]="schedule.sum" type="number" id="sum" name="sum" >eur<br>
+
+  <label for="interest">Interest rate:</label>
+  <input [(ngModel)]="schedule.interest" type="number" name="interest" id="interest">%<br>
+
+  <label for="months">Months:</label>
+  <input [(ngModel)]="schedule.months"  type="number" name="months" id="months">({{years}} years)<br>
+
+</form>

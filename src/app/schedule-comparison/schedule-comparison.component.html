@@ -1,0 +1,25 @@
+<p>
+  Original schedule will finish at {{endDate}}, which is {{duration}} from today
+</p>
+<!-- todo: implement visual change "bar" for better comparison -->
+<ng-container *ngIf="changedSchedule">
+    <p>
+      Updated schedule will finish at {{changedEndDate}}, which is {{changedDuration}} from today
+    </p>
+    <p>
+      Savings: {{timeSavings}}
+    </p>
+</ng-container>
+<hr>
+<p>
+  Original total cost {{total}}eur, overpaid {{interestTotal}}eur 
+</p>
+<ng-container *ngIf="changedSchedule">
+    <p>
+      Updated total cost {{changedTotal}}eur, overpaid {{changedInterestTotal}}eur 
+    </p>
+    <p>
+      Savings: {{savings}}eur in interest
+    </p>
+</ng-container>
+

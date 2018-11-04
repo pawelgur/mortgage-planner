@@ -1,0 +1,14 @@
+<ng-container *ngIf="schedule">
+  <schedule-options [schedule]="schedule" (scheduleUpdated)="onScheduleUpdated($event)"></schedule-options><changes 
+    (onChanges)="onChangesUpdated($event)" [changes]="schedule.changes" ></changes>
+
+  <hr>
+
+  <schedule-comparison [schedule]="linearSchedule" [changedSchedule]="changedSchedule" ></schedule-comparison>
+
+  <div *ngIf="hasChanges">
+    <button (click)="showOriginal = !showOriginal">toggle original schedule</button>
+  </div>
+
+  <schedule *ngIf="showOriginal || !hasChanges" [schedule]="linearSchedule"></schedule><schedule *ngIf="hasChanges" [schedule]="changedSchedule"></schedule>
+</ng-container>

@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { Schedule } from './mortgage/mortgage.model';
+import { ScheduleService } from './schedule/schedule.service';
+import { AppStateService } from './app-state.service';
+import { getScheduleName } from './schedule/schedule.util';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +10,26 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app';
+  schedules: Schedule[] = [];
+
+  constructor(
+    private appState: AppStateService
+  ) {}
+
+  ngOnInit() {
+    this.appState.getSchedules()
+      .subscribe(schedules => this.schedules = schedules);
+  }
+
+  scheduleName(schedule: Schedule) {
+    return getScheduleName(schedule);
+  }
+
+  create() {
+    this.appState.createSchedule();
+  }
+
+  remove(schedule: Schedule) {
+    this.appState.removeSchedule(schedule);    
+  }
 }

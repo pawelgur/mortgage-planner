@@ -1,0 +1,7 @@
+<form (submit)="onSave()">
+    <label for="returnDate">Date:</label><input [(ngModel)]="returnDate" type="text" id="returnDate" name="returnDate" [disabled]="!isEditing" > <br>
+    <label for="returnAmount">Amount:</label><input [(ngModel)]="returnAmount"  type="number" name="returnAmount" id="returnAmount" [disabled]="!isEditing">eur <br>
+    <input type="submit" value="save" [disabled]="!isEditing">
+    <input type="button" value="edit" (click)="onEdit()" [disabled]="isEditing">
+    <input type="button" value="remove" (click)="changeRemoved.emit(change)">
+</form>

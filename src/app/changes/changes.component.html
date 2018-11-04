@@ -1,0 +1,13 @@
+<h3>Changes:</h3>
+<ul>
+  <li *ngFor="let change of changes; trackBy:trackById">
+    <change-row [change]="change" (changeUpdated)="onChangeUpdate($event)" (changeRemoved)="onChangeRemove($event)"></change-row>
+   </li>
+</ul>
+<input type="button" value="add" (click)="addChange()" >
+<!-- <h4>Periodic changes</h4>
+From: <input [(ngModel)]="returnStartDate" type="text"name="returnStartDate"  > <br>
+Amount: <input [(ngModel)]="returnAmount" type="number"name="returnAmount"  >eur <br>
+Times: <input [(ngModel)]="returnTimes" type="number"name="returnTimes"  > <br>
+Every <input [(ngModel)]="returnPeriodMonths" type="number"name="returnPeriodMonths"  > months <br>
+<input type="button" value="add periodic" (click)="onPeriodicAdd()"> -->
