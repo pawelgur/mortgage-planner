@@ -1,0 +1,11 @@
+:host {
+    display: block;
+}
+
+tr:hover {
+    background: #32154c;
+
+    td {
+        border-color: #32154c;
+    }
+}

@@ -16,7 +16,7 @@
           <ng-container *ngIf="service.isScheduledPayment(payment); else notScheduled">
               <td>{{payment.paymentNr+1}}</td>
               <td>{{formatDate(payment.date)}}</td>
-              <td>{{payment.cover}}</td>
+              <td>{{payment.cover || ""}}</td>
               <td>{{payment.interest}}</td>
               <td>{{payment.sum}}</td>
               <td>{{payment.left}}</td>

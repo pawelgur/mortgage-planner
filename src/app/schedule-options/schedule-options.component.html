@@ -2,8 +2,6 @@
   <label for="startDate">Start date:</label>
   <input [(ngModel)]="schedule.startDate" type="text" id="startDate" name="startDate"><br>
 
-  <label for="paymentDay">Payment day:</label>
-  <input [(ngModel)]="schedule.paymentDay"  type="number" name="paymentDay" id="paymentDay">eur<br>
 
   <label for="sum">Sum:</label>
   <input [(ngModel)]="schedule.sum" type="number" id="sum" name="sum" >eur<br>
@@ -11,7 +9,38 @@
   <label for="interest">Interest rate:</label>
   <input [(ngModel)]="schedule.interest" type="number" name="interest" id="interest">%<br>
 
-  <label for="months">Months:</label>
-  <input [(ngModel)]="schedule.months"  type="number" name="months" id="months">({{years}} years)<br>
+  <div class="options-wrapper">
+    <tr>
+      <td>
+          <input type="radio" name="optionType" value="endDate" 
+          (change)="onOptionTypeChange($event)" 
+          [checked]="isEndTimeSelected">
+      </td>
+      <td>
+          <label for="endDate">End date:</label>
+          <input [(ngModel)]="endDate" type="text" id="endDate" name="endDate" [disabled]="!isEndTimeSelected"><br>
+      </td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>
+          <input type="radio" name="optionType" value="count" 
+          (change)="onOptionTypeChange($event)"
+          [checked]="!isEndTimeSelected">
+      </td>
+      <td>
+          <label for="paymentDay">Payment day:</label>
+          <input [(ngModel)]="schedule.paymentDay"  type="number" name="paymentDay" id="paymentDay" [disabled]="isEndTimeSelected"><br>
+          <label for="months">Payments:</label>
+          <input [(ngModel)]="schedule.months"  type="number" name="months" id="months" [disabled]="isEndTimeSelected">({{years}} years)<br>
+      </td>
+    </tr>
+  </div>
+  
+  
+  
 
 </form>

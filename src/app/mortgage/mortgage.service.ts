@@ -21,7 +21,7 @@ export class MortgageService {
         // cover change strategy: decrease payment count leaving monthly cover intact
         // other strategy: same payment count - smaller monthly cover
         const startDate = moment(schedule.startDate, DATE_FORMAT);
-        const endDate = moment(startDate).add(schedule.months, "month").date(schedule.paymentDay);
+        const endDate = this.getEndDate(schedule);
         const monthlyCover = this.round(schedule.sum / schedule.months);
 
         return this.calculateSchedulePart(
@@ -36,7 +36,6 @@ export class MortgageService {
     }
 
     // calculates linear schedule with changes
-    // todo: bug - does not calculate change if it happens on day of payment
     calculateSchedulePart(creditLeft: number, monthlyCover: number, interestRate: number, startDate: moment.Moment, endDate: moment.Moment, dayOfPayment: number, changes: CoverChange[]) {
         let schedule: Payment[] = [];
         let previousPayment = startDate;
@@ -46,8 +45,9 @@ export class MortgageService {
             let paymentInterest = 0;
             const currentChanges = _.filter(changes, x => {
                 const changeDate = moment(x.date, DATE_FORMAT);
-                return changeDate.isAfter(previousPayment) && changeDate.isBefore(nextPayment);
+                return changeDate.isAfter(previousPayment) && changeDate.isBefore(nextPayment) || changeDate.isSame(nextPayment, "day");
             });
+
             if (currentChanges.length) {
                 for (const change of currentChanges) {
                     let changeDate = moment(change.date, DATE_FORMAT);
@@ -73,15 +73,18 @@ export class MortgageService {
                 }
             }
 
+            // no cover payment if had returned money during previous month
+            const currentCover = currentChanges.length ? 0 : monthlyCover; 
+
             paymentInterest += this.calculateInterest(previousPayment, nextPayment, creditLeft, interestRate);
 
-            creditLeft -= monthlyCover;
+            creditLeft -= currentCover;
 
             schedule.push({
                 paymentNr: this.getNextPaymentNr(schedule),
-                cover: monthlyCover,
+                cover: currentCover,
                 interest: this.round(paymentInterest),
-                sum: this.round(monthlyCover + paymentInterest),
+                sum: this.round(currentCover + paymentInterest),
                 left: this.round(creditLeft),
                 date: nextPayment
             });
@@ -149,6 +152,11 @@ export class MortgageService {
         }
 
         return "none";
+    }
+
+    getEndDate(schedule: Schedule) {
+        const startDate = moment(schedule.startDate, DATE_FORMAT);
+        return startDate.add(schedule.months, "month").date(schedule.paymentDay);
     }
 
     /**
