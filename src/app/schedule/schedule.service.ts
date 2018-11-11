@@ -35,13 +35,8 @@ export class ScheduleService {
     }
 
     create(): Schedule {
-        const ids = this.getIds();
-        const id = _.isEmpty(ids) 
-            ? 1 
-            : _.last(ids) + 1;
-
         return {
-            id,
+            id: this.getNewId(),
             sum: 10000,
             interest: 3,
             startDate: moment().format(DATE_FORMAT),
@@ -61,6 +56,13 @@ export class ScheduleService {
         this.saveIds(ids);
     }
 
+    copy(schedule: Schedule) {
+        const clonedSchedule = _.cloneDeep(schedule);
+        clonedSchedule.id = this.getNewId();
+        
+        return clonedSchedule;
+    }
+
     private getIds(): number[] {
         const rawIds = localStorage.getItem(idsKey);
         if (!rawIds) {
@@ -76,6 +78,13 @@ export class ScheduleService {
 
     private getItemKey(id: number) {
         return `sch_item_${id}`;
+    }
+
+    private getNewId() {
+        const ids = this.getIds();
+        return _.isEmpty(ids) 
+            ? 1 
+            : _.last(ids) + 1;
     }
 
 }

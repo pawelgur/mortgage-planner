@@ -6,7 +6,6 @@ import { ScheduleService } from "./schedule/schedule.service";
 import { Observable } from "rxjs/Observable";
 import { map, distinctUntilChanged } from "rxjs/operators";
 
-
 @Injectable()
 export class AppStateService {
     // todo: make this central part for updating and getting data (schedule.service would be more like "client" that would react to schedule updates)
@@ -25,8 +24,7 @@ export class AppStateService {
 
     createSchedule(): Schedule {
         const schedule = this.scheduleService.create();
-        this.scheduleService.save(schedule);
-        this.schedules$.next();
+        this.updateSchedule(schedule);
 
         return schedule;
     }
@@ -40,6 +38,11 @@ export class AppStateService {
     removeSchedule(schedule: Schedule) {
         this.scheduleService.remove(schedule);
         this.schedules$.next();
+    }
+
+    copySchedule(schedule: Schedule) {
+        const newSchedule = this.scheduleService.copy(schedule);
+        this.updateSchedule(newSchedule);
     }
 
 }

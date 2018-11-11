@@ -32,4 +32,8 @@ export class AppComponent {
   remove(schedule: Schedule) {
     this.appState.removeSchedule(schedule);    
   }
+
+  copy(schedule: Schedule) {
+    this.appState.copySchedule(schedule);    
+  }
 }

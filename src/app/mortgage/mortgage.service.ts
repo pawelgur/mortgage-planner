@@ -128,6 +128,10 @@ export class MortgageService {
         return !_.isNil(payment.paymentNr);
     }
 
+    getTotalCover(schedule: Payment[]) {
+        return this.round(_.sumBy(schedule, x => x.cover));
+    }
+
     getTotalPaid(schedule: Payment[]) {
         return this.round(_.sumBy(schedule, x => x.sum));
     }

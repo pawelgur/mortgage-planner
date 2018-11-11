@@ -10,13 +10,20 @@ import * as _ from "lodash";
 })
 export class ChangesComponent {
 
-    @Input() changes: CoverChange[] = [];
+    @Input() set changes(changes: CoverChange[]) {
+        this._changes = [...changes];
+    } 
+    get changes() {
+        return this._changes;
+    }
+    _changes: CoverChange[];
+
     @Output() onChanges = new EventEmitter<CoverChange[]>();
 
     returnStartDate = "2018-01-01";
     returnAmount: number = 1500;
     returnTimes: number = 10;
-    returnPeriodMonths: number = 2;
+    returnPeriodMonths: number = 2;    
 
     addChange() {
         const lastChange = _.last(this.changes);

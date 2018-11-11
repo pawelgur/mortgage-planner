@@ -15,6 +15,7 @@ export class ScheduleComponent {
   @Input() schedule: Payment[] = [];
 
   total: number;
+  coverTotal: number;
   interestTotal: number;
 
   constructor(
@@ -23,6 +24,7 @@ export class ScheduleComponent {
 
   ngOnChanges() {
       this.total =  this.service.getTotalPaid(this.schedule);
+      this.coverTotal = this.service.getTotalCover(this.schedule);
       this.interestTotal = this.service.getTotalInterest(this.schedule);
   }
 

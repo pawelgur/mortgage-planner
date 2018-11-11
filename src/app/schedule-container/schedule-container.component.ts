@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Schedule, Payment, CoverChange, DATE_FORMAT } from '../mortgage/mortgage.model';
 import { ScheduleService } from '../schedule/schedule.service';
@@ -12,7 +12,8 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   selector: 'schedule-container',
   templateUrl: './schedule-container.component.html',
-  styleUrls: ['./schedule-container.component.scss']
+  styleUrls: ['./schedule-container.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduleContainerComponent implements OnInit {
 
@@ -31,7 +32,8 @@ export class ScheduleContainerComponent implements OnInit {
     private route: ActivatedRoute,
     private scheduleService: ScheduleService,
     private service: MortgageService,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private changeDetector: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -43,6 +45,8 @@ export class ScheduleContainerComponent implements OnInit {
 
       this.linearSchedule = this.service.calculateLinearSchedule(this.schedule);
       this.recalculateChangedSchedule();
+
+      this.changeDetector.markForCheck();
     });
   }
 
@@ -57,7 +61,8 @@ export class ScheduleContainerComponent implements OnInit {
     this.recalculateChangedSchedule();
   }
 
-  onChangesUpdated() {    
+  onChangesUpdated(changes: CoverChange[]) {    
+    this.schedule.changes = changes;
     this.appState.updateSchedule(this.schedule);
     this.recalculateChangedSchedule();
   }
