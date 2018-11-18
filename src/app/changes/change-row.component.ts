@@ -15,21 +15,24 @@ export class ChangeRowComponent {
 
     returnDate: string = "yyyy-mm-dd";
     returnAmount: number;
+    penaltyEnabled = true;
     isEditing = true;
 
     formatDate(date: moment.Moment) {
         return date.format("YYYY-MM-DD");
     }
 
-    ngOnInit() {
+    ngOnChanges() {
         this.returnDate = this.change.date;
         this.returnAmount = this.change.amount;
+        this.penaltyEnabled = this.change.penaltyEnabled === undefined ? false : true;
     }
 
     onSave() {
         this.isEditing = false;
         this.change.date = this.returnDate;
         this.change.amount = this.returnAmount;
+        this.change.penaltyEnabled = this.penaltyEnabled;
         this.changeUpdated.emit();
     }
 

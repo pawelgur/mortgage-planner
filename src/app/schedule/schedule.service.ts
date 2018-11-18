@@ -44,7 +44,8 @@ export class ScheduleService {
             months: 120,
             type: ScheduleType.linear,          
             changes: [],
-            extraCharges: 0
+            extraCharges: 0,
+            coverPenaltyValue: 0
         }
     }
 

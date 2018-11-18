@@ -31,7 +31,8 @@ export class ChangesComponent {
         this.changes.push({
             id: lastChange ? lastChange.id + 1 : 1,
             date: date.format(DATE_FORMAT),
-            amount: 0
+            amount: 0,
+            penaltyEnabled: true
         });
     }
 

@@ -25,24 +25,35 @@ export class MortgageService {
             startDate,
             endDate,
             schedule.paymentDay,
-            ignoreChanges ? [] : schedule.changes
+            ignoreChanges ? [] : schedule.changes,
+            schedule.coverPenalty
         );
 
         const totalCover = this.getTotalCover(payments);
         const totalInterest = this.getTotalInterest(payments);
-        const extraCharges = schedule.extraCharges || 0;
+        const totalSum = this.getTotalSum(payments);
+        const extraCharges = schedule.extraCharges || 0; // consider adding extra payment at start date
 
         return {
             payments,
             totalCover,
             totalInterest,
-            totalSum: this.round(totalCover + totalInterest),
-            total: this.round(totalCover + totalInterest + extraCharges)
+            totalSum,
+            total: this.round(totalSum + extraCharges)
         }
     }
 
     // calculates linear schedule with changes
-    calculateLinearSchedule(creditLeft: number, monthlyCover: number, interestRate: number, startDate: moment.Moment, endDate: moment.Moment, dayOfPayment: number, changes: CoverChange[]) {
+    private calculateLinearSchedule(
+        creditLeft: number,
+        monthlyCover: number,
+        interestRate: number,
+        startDate: moment.Moment,
+        endDate: moment.Moment,
+        dayOfPayment: number,
+        changes: CoverChange[],
+        coverPenalty: number
+    ) {
         let schedule: Payment[] = [];
         let previousPayment = startDate;
         let nextPayment = moment(previousPayment).add(1, "month").date(dayOfPayment);
@@ -75,6 +86,18 @@ export class MortgageService {
                     });
 
                     previousPayment = changeDate;
+
+                    // add cover penalty
+                    if (change.penaltyEnabled && coverPenalty) {
+                        // todo: consider having different model for extra charge
+                        schedule.push({
+                            date: changeDate,
+                            cover: 0,
+                            left: 0,
+                            sum: this.round(change.amount * coverPenalty / 100),
+                            interest: 0
+                        });
+                    }
 
                     if (creditLeft <= 0) {
                         return schedule;
@@ -114,7 +137,7 @@ export class MortgageService {
         return this.round(_.sumBy(schedule, x => x.cover));
     }
 
-    getTotalPaid(schedule: Payment[]) {
+    getTotalSum(schedule: Payment[]) {
         return this.round(_.sumBy(schedule, x => x.sum));
     }
 

@@ -18,6 +18,7 @@ export interface ScheduledPayment {
 
 export interface CoverChangePayment {
     cover: number;
+    interest: number;
     sum: number;
     left: number;
     date: moment.Moment
@@ -26,7 +27,8 @@ export interface CoverChangePayment {
 export interface CoverChange {
     id: number;
     date: string;
-    amount: number;    
+    amount: number;
+    penaltyEnabled: boolean;
 }
 
 export enum ScheduleType {
@@ -46,6 +48,7 @@ export interface Schedule {
     type: ScheduleType;
     changes: CoverChange[];
     extraCharges: number; // todo: consider having name-value pairs
+    coverPenaltyValue: number; // extra charge for every cover payment, percentage
 }
 
 /**
