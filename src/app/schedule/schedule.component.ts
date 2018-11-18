@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
-import { Payment, CalculatedSchedule } from "../mortgage/mortgage.model";
+import { Payment, CalculatedSchedule, ScheduledPayment } from "../mortgage/mortgage.model";
 import { MortgageService } from "../mortgage/mortgage.service";
 import * as _ from "lodash";
 import * as moment from "moment";
@@ -20,6 +20,12 @@ export class ScheduleComponent {
 
   formatDate(date: moment.Moment) {
       return date.format("YYYY-MM-DD");
+  }
+
+  getPaymentLabel(payment: Payment) {
+    return this.service.isScheduledPayment(payment)
+      ? (payment as ScheduledPayment).paymentNr
+      : "(ret)";
   }
 
 }

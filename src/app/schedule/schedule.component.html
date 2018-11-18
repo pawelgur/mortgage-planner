@@ -13,22 +13,14 @@
   </thead>
   <tbody>
       <tr *ngFor="let payment of schedule.payments">
-          <ng-container *ngIf="service.isScheduledPayment(payment); else notScheduled">
-              <td>{{payment.paymentNr+1}}</td>
+          <ng-container>
+              <td>{{getPaymentLabel(payment)}}</td>
               <td>{{formatDate(payment.date)}}</td>
               <td>{{payment.cover || ""}}</td>
               <td>{{payment.interest}}</td>
               <td>{{payment.sum}}</td>
               <td>{{payment.left}}</td>
-          </ng-container>
-          <ng-template #notScheduled>
-              <td>(ret)</td>
-              <td>{{formatDate(payment.date)}}</td>
-              <td>{{payment.cover}}</td>
-              <td></td>
-              <td>{{payment.cover}}</td>
-              <td>{{payment.left}}</td>
-          </ng-template>    
+          </ng-container>   
         </tr>
   </tbody>
   <tfoot>

@@ -47,8 +47,7 @@ export class MortgageService {
         let previousPayment = startDate;
         let nextPayment = moment(previousPayment).add(1, "month").date(dayOfPayment);
         
-        while(!nextPayment.isAfter(endDate) && creditLeft >= 0) {
-            let paymentInterest = 0;
+        while(!nextPayment.isAfter(endDate) && creditLeft > 0) {
             const currentChanges = _.filter(changes, x => {
                 const changeDate = moment(x.date, DATE_FORMAT);
                 return changeDate.isAfter(previousPayment) && changeDate.isBefore(nextPayment) || changeDate.isSame(nextPayment, "day");
@@ -60,15 +59,19 @@ export class MortgageService {
                     let periodEnd = changeDate;
                     
                     // payment is divided by change into periods of different creditLeft and days
-                    paymentInterest += this.calculateInterest(previousPayment, periodEnd, creditLeft, interestRate);
+                    const changeInterest = this.calculateInterest(previousPayment, periodEnd, creditLeft, interestRate);
+                    
+                    // interest is included in change amount and paid at same time
+                    const changeCover = change.amount - changeInterest; 
 
-                    creditLeft -= change.amount;
+                    creditLeft -= changeCover;
 
                     schedule.push({
                         date: changeDate,
-                        cover: change.amount,
+                        cover: this.round(changeCover),
                         left: this.round(creditLeft),
-                        sum: change.amount
+                        sum: change.amount,
+                        interest: this.round(changeInterest)
                     });
 
                     previousPayment = changeDate;
@@ -80,15 +83,16 @@ export class MortgageService {
             }
 
             // no cover payment if had returned money during previous month
-            const currentCover = currentChanges.length ? 0 : monthlyCover; 
+            let currentCover = currentChanges.length ? 0 : monthlyCover; 
+            currentCover = currentCover > creditLeft ? creditLeft : currentCover;
 
-            paymentInterest += this.calculateInterest(previousPayment, nextPayment, creditLeft, interestRate);
+            let paymentInterest = this.calculateInterest(previousPayment, nextPayment, creditLeft, interestRate);
 
             creditLeft -= currentCover;
 
             schedule.push({
                 paymentNr: this.getNextPaymentNr(schedule),
-                cover: currentCover,
+                cover: this.round(currentCover),
                 interest: this.round(paymentInterest),
                 sum: this.round(currentCover + paymentInterest),
                 left: this.round(creditLeft),
