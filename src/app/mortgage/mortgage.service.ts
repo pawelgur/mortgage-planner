@@ -1,42 +1,48 @@
 import { Injectable } from "@angular/core";
-import { Payment, CoverChange, ScheduledPayment, Schedule, DATE_FORMAT } from "./mortgage.model";
+import { Payment, CoverChange, ScheduledPayment, Schedule, DATE_FORMAT, CalculatedSchedule } from "./mortgage.model";
 import * as moment from "moment";
 import * as _ from "lodash";
 
-// todo: instead of having one base and another same with changes, add any number of instances each with changes
-// todo: add interest change
-// todo: add anuitetas
-// todo: remove (edit?) change directly from schedule view
-
 @Injectable()
 export class MortgageService {
-
     
     round(value: number) {
         return Math.round(value * 100) / 100;
     }
     
     // calculates linear schedule with changes
-    calculateSchedule(schedule: Schedule) {
+    calculateSchedule(schedule: Schedule, ignoreChanges = false): CalculatedSchedule {
         // cover change strategy: decrease payment count leaving monthly cover intact
         // other strategy: same payment count - smaller monthly cover
         const startDate = moment(schedule.startDate, DATE_FORMAT);
         const endDate = this.getEndDate(schedule);
         const monthlyCover = this.round(schedule.sum / schedule.months);
 
-        return this.calculateSchedulePart(
+        const payments = this.calculateLinearSchedule(
             schedule.sum,
             monthlyCover,
             schedule.interest/100,
             startDate,
             endDate,
             schedule.paymentDay,
-            schedule.changes
+            ignoreChanges ? [] : schedule.changes
         );
+
+        const totalCover = this.getTotalCover(payments);
+        const totalInterest = this.getTotalInterest(payments);
+        const extraCharges = schedule.extraCharges || 0;
+
+        return {
+            payments,
+            totalCover,
+            totalInterest,
+            totalSum: this.round(totalCover + totalInterest),
+            total: this.round(totalCover + totalInterest + extraCharges)
+        }
     }
 
     // calculates linear schedule with changes
-    calculateSchedulePart(creditLeft: number, monthlyCover: number, interestRate: number, startDate: moment.Moment, endDate: moment.Moment, dayOfPayment: number, changes: CoverChange[]) {
+    calculateLinearSchedule(creditLeft: number, monthlyCover: number, interestRate: number, startDate: moment.Moment, endDate: moment.Moment, dayOfPayment: number, changes: CoverChange[]) {
         let schedule: Payment[] = [];
         let previousPayment = startDate;
         let nextPayment = moment(previousPayment).add(1, "month").date(dayOfPayment);
@@ -94,37 +100,6 @@ export class MortgageService {
         }
 
         return schedule;
-    }
-
-    // simple linear schedule calculation
-    calculateLinearSchedule(schedule: Schedule): ScheduledPayment[] {
-        let interest = schedule.interest/100;
-        let startDate = moment(schedule.startDate, DATE_FORMAT);
-        let creditLeft = schedule.sum;
-        let paymentsSchedule: ScheduledPayment[] = [];
-
-        let monthlyCover = this.round(schedule.sum / schedule.months);
-        let previousPayment = startDate;
-        
-        for (let paymentNr = 0; paymentNr < schedule.months; paymentNr++) {
-            const paymentDate = moment(previousPayment).add(1, "month").date(schedule.paymentDay); 
-            const monthlyInterest = this.calculateInterest(previousPayment, paymentDate, creditLeft, interest);
-            
-            creditLeft -= monthlyCover;
-
-            paymentsSchedule.push({
-                paymentNr,
-                cover: monthlyCover,
-                interest: this.round(monthlyInterest),
-                sum: this.round(monthlyCover + monthlyInterest),
-                left: this.round(creditLeft),
-                date: paymentDate
-            });
-
-            previousPayment = paymentDate;
-        }
-
-        return paymentsSchedule;
     }
 
     isScheduledPayment(payment: any) {

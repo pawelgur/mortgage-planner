@@ -12,7 +12,7 @@
         </tr>
   </thead>
   <tbody>
-      <tr *ngFor="let payment of schedule">
+      <tr *ngFor="let payment of schedule.payments">
           <ng-container *ngIf="service.isScheduledPayment(payment); else notScheduled">
               <td>{{payment.paymentNr+1}}</td>
               <td>{{formatDate(payment.date)}}</td>
@@ -35,9 +35,9 @@
       <tr>
           <td></td>
           <td></td>
-          <td>{{coverTotal}}</td>
-          <td>{{interestTotal}}</td>
-          <td>{{total}}</td>
+          <td>{{schedule.totalCover}}</td>
+          <td>{{schedule.totalInterest}}</td>
+          <td>{{schedule.totalSum}}</td>
           <td></td>
         </tr>
   </tfoot>

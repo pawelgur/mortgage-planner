@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Schedule, Payment, CoverChange, DATE_FORMAT } from '../mortgage/mortgage.model';
+import { Schedule, Payment, CoverChange, DATE_FORMAT, CalculatedSchedule } from '../mortgage/mortgage.model';
 import { ScheduleService } from '../schedule/schedule.service';
 import { getScheduleName } from '../schedule/schedule.util';
 import { MortgageService } from '../mortgage/mortgage.service';
@@ -19,12 +19,10 @@ export class ScheduleContainerComponent implements OnInit {
 
   schedule: Schedule;
 
-  linearSchedule: Payment[] = [];
-  changedSchedule: Payment[] = [];
-
-  savings = 0;
-  timeSavings = "none";
-  showOriginal = false;
+  linearSchedule: CalculatedSchedule;
+  changedSchedule: CalculatedSchedule;
+  
+  hideChanges = false;
 
   private params$$: Subscription;
 
@@ -43,7 +41,7 @@ export class ScheduleContainerComponent implements OnInit {
       const id = +params.get("id");
       this.schedule = this.scheduleService.get(id);
 
-      this.linearSchedule = this.service.calculateLinearSchedule(this.schedule);
+      this.linearSchedule = this.service.calculateSchedule(this.schedule, true);
       this.recalculateChangedSchedule();
 
       this.changeDetector.markForCheck();
@@ -57,7 +55,7 @@ export class ScheduleContainerComponent implements OnInit {
   onScheduleUpdated() {
     this.appState.updateSchedule(this.schedule);        
 
-    this.linearSchedule = this.service.calculateLinearSchedule(this.schedule);
+    this.linearSchedule = this.service.calculateSchedule(this.schedule, true);
     this.recalculateChangedSchedule();
   }
 
@@ -74,15 +72,10 @@ export class ScheduleContainerComponent implements OnInit {
   private recalculateChangedSchedule() {
     if (_.isEmpty(this.schedule.changes)) {
       this.changedSchedule = undefined;
-      this.savings = 0;
-      this.timeSavings = undefined;
       return;
     }
 
     this.changedSchedule = this.service.calculateSchedule(this.schedule);
-
-    this.savings = this.service.round(this.service.getTotalPaid(this.linearSchedule) - this.service.getTotalPaid(this.changedSchedule));
-    this.timeSavings = this.service.getEndDifference(this.linearSchedule, this.changedSchedule);
   }
 
   get name() {
@@ -91,6 +84,10 @@ export class ScheduleContainerComponent implements OnInit {
 
   get hasChanges() {
     return !_.isEmpty(this.schedule.changes);
+  }
+
+  get calculatedSchedule() {
+    return this.hasChanges && !this.hideChanges ? this.changedSchedule : this.linearSchedule;
   }
 
 }

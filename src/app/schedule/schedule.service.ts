@@ -43,7 +43,8 @@ export class ScheduleService {
             paymentDay: 7,
             months: 120,
             type: ScheduleType.linear,          
-            changes: []
+            changes: [],
+            extraCharges: 0
         }
     }
 

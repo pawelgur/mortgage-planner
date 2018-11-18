@@ -12,14 +12,14 @@
 </ng-container>
 <hr>
 <p>
-  Original total cost {{total}}eur, overpaid {{interestTotal}}eur 
+  Original total cost {{total}}eur, overpaid {{overpaid}}eur 
 </p>
 <ng-container *ngIf="changedSchedule">
     <p>
-      Updated total cost {{changedTotal}}eur, overpaid {{changedInterestTotal}}eur 
+      Updated total cost {{changedTotal}}eur, overpaid {{changedOverpaid}}eur 
     </p>
     <p>
-      Savings: {{savings}}eur in interest
+      Savings: {{savings}}eur
     </p>
 </ng-container>
 

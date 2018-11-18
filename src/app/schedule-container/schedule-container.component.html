@@ -7,11 +7,10 @@
   <schedule-comparison [schedule]="linearSchedule" [changedSchedule]="changedSchedule" ></schedule-comparison>
 
   <div *ngIf="hasChanges">
-    <button (click)="showOriginal = !showOriginal">toggle original schedule</button>
+    <button (click)="hideChanges = !hideChanges">toggle changes</button>
   </div>
 
-  <schedule *ngIf="showOriginal || !hasChanges" [schedule]="linearSchedule"></schedule>
-  <schedule *ngIf="hasChanges" [schedule]="changedSchedule"></schedule>
+  <schedule *ngIf="calculatedSchedule" [schedule]="calculatedSchedule"></schedule>
 </ng-container>
 
 <hr>
@@ -19,9 +18,10 @@
     todo:   
   </p>
   <ul>
-      <li>initial extra charges</li>
       <li>return charge</li>
+      <li>compare schedules</li>
       <li>change calculation type - decrease monthly cover</li>
       <li>anuitetas</li>
-      <li>end date alternative to payments count</li>
+      <li>interest change</li>
+      <li>update changes directly from list</li>
     </ul>

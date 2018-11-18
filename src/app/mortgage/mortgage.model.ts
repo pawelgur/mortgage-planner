@@ -45,4 +45,18 @@ export interface Schedule {
     months: number;
     type: ScheduleType;
     changes: CoverChange[];
+    extraCharges: number; // todo: consider having name-value pairs
+}
+
+/**
+ * Calculated based on `Schedule`
+ */
+export interface CalculatedSchedule {
+    payments: Payment[];
+    totalInterest: number;
+    totalCover: number;
+    /** interest + cover */
+    totalSum: number;
+    /** sum + extra charges */
+    total: number;
 }
