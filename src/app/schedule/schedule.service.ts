@@ -35,8 +35,9 @@ export class ScheduleService {
     }
 
     create(): Schedule {
-        return {
+        const schedule: Schedule = {
             id: this.getNewId(),
+            name: "",
             sum: 10000,
             interest: 3,
             startDate: moment().format(DATE_FORMAT),
@@ -47,6 +48,10 @@ export class ScheduleService {
             extraCharges: 0,
             coverPenalty: 0
         };
+
+        schedule.name = `${schedule.startDate} ${schedule.sum}eur ${schedule.months} months`;
+
+        return schedule;
     }
 
     remove(schedule: Schedule) {

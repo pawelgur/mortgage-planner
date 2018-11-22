@@ -4,7 +4,7 @@
 <nav>
   <ul *ngFor="let schedule of schedules">
     <a routerLink="schedule/{{schedule.id}}" routerLinkActive="active">
-      {{scheduleName(schedule)}}
+      {{schedule.name}}
     </a>
     <button (click)="remove(schedule)">X</button>
     <button (click)="copy(schedule)">copy</button>

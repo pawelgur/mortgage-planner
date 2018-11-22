@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ChangeDetectionStrategy, ChangeDetectorRe
 import { ActivatedRoute } from '@angular/router';
 import { Schedule, Payment, CoverChange, DATE_FORMAT, CalculatedSchedule } from '../mortgage/mortgage.model';
 import { ScheduleService } from '../schedule/schedule.service';
-import { getScheduleName } from '../schedule/schedule.util';
 import { MortgageService } from '../mortgage/mortgage.service';
 import * as moment from "moment";
 import * as _ from "lodash";
@@ -76,10 +75,6 @@ export class ScheduleContainerComponent implements OnInit {
     }
 
     this.changedSchedule = this.service.calculateSchedule(this.schedule);
-  }
-
-  get name() {
-    return this.schedule && getScheduleName(this.schedule);
   }
 
   get hasChanges() {

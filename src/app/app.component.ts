@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Schedule } from './mortgage/mortgage.model';
 import { AppStateService } from './app-state.service';
-import { getScheduleName } from './schedule/schedule.util';
 
 @Component({
   selector: 'app-root',
@@ -18,10 +17,6 @@ export class AppComponent {
   ngOnInit() {
     this.appState.getSchedules()
       .subscribe(schedules => this.schedules = schedules);
-  }
-
-  scheduleName(schedule: Schedule) {
-    return getScheduleName(schedule);
   }
 
   create() {

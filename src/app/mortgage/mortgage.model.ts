@@ -40,6 +40,7 @@ export enum ScheduleType {
  */
 export interface Schedule {
     id: number;
+    name: string;
     sum: number;
     interest: number;
     startDate: string;
