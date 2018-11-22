@@ -29,17 +29,29 @@ export class ScheduleOptionsComponent {
 
   ngOnChanges(changes: { schedule: SimpleChange }) {
     const prevSchedule = changes.schedule.previousValue
-    if (this.schedule && prevSchedule && this.schedule.id !== prevSchedule.id || !prevSchedule) {
+    if (this.schedule && prevSchedule && this.schedule.id !== prevSchedule.id || this.schedule && !prevSchedule) {
       this.optionType = "endDate";
       this.endDate = this.mortgageService.getEndDate(this.schedule).format(DATE_FORMAT);
+
+      this.initForm();
     }    
   }
 
-  ngAfterViewInit() {
+  ngOnDestroy() {
+    if (this.valueChanges$$) {
+      this.valueChanges$$.unsubscribe();
+    }
+  }
+
+  initForm() {
+    if (this.valueChanges$$) {
+      this.valueChanges$$.unsubscribe();
+    }
+
     this.valueChanges$$ = this.form.form.valueChanges
       .pipe(
         debounceTime(400),
-        skip(1) // skip initial emit todo: improve as it still gets through
+        skip(1) // skip initial emit
       )
       .subscribe(() => {
         if (this.isEndTimeSelected) {
@@ -53,13 +65,7 @@ export class ScheduleOptionsComponent {
         }        
 
         this.scheduleUpdated.emit(this.schedule);
-    });    
-  }
-
-  ngOnDestroy() {
-    if (this.valueChanges$$) {
-      this.valueChanges$$.unsubscribe();
-    }
+    }); 
   }
 
   get years() {

@@ -15,6 +15,8 @@ import { ChangesComponent } from './changes/changes.component';
 import { ChangeRowComponent } from './changes/change-row.component';
 import { ScheduleOptionsComponent } from './schedule-options/schedule-options.component';
 import { ScheduleComparisonComponent } from './schedule-comparison/schedule-comparison.component';
+import { ComparisonComponent } from './comparison/comparison.component';
+import { ScheduleSelectorComponent } from './schedule-selector/schedule-selector.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { ScheduleComparisonComponent } from './schedule-comparison/schedule-comp
     ChangesComponent,
     ChangeRowComponent,
     ScheduleOptionsComponent,
-    ScheduleComparisonComponent
+    ScheduleComparisonComponent,
+    ComparisonComponent,
+    ScheduleSelectorComponent
   ],
   imports: [
     BrowserModule,

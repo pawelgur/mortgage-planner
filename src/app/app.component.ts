@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Schedule } from './mortgage/mortgage.model';
-import { ScheduleService } from './schedule/schedule.service';
 import { AppStateService } from './app-state.service';
 import { getScheduleName } from './schedule/schedule.util';
 

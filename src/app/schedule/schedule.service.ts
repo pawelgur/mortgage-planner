@@ -45,8 +45,8 @@ export class ScheduleService {
             type: ScheduleType.linear,          
             changes: [],
             extraCharges: 0,
-            coverPenaltyValue: 0
-        }
+            coverPenalty: 0
+        };
     }
 
     remove(schedule: Schedule) {

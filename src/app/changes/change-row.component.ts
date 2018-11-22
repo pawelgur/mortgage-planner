@@ -25,7 +25,7 @@ export class ChangeRowComponent {
     ngOnChanges() {
         this.returnDate = this.change.date;
         this.returnAmount = this.change.amount;
-        this.penaltyEnabled = this.change.penaltyEnabled === undefined ? false : true;
+        this.penaltyEnabled = !!this.change.penaltyEnabled;
     }
 
     onSave() {

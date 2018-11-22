@@ -1,0 +1,14 @@
+<p>
+  Schedule 1
+  <schedule-selector [schedules]="schedules" (onSelect)="onSelect($event)"></schedule-selector>
+</p>
+
+<p>
+  Schedule 2
+  <schedule-selector [schedules]="schedules" (onSelect)="onSelect($event, false)"></schedule-selector>
+</p>
+
+
+<schedule-comparison *ngIf="schedule1" [schedule]="schedule1" [changedSchedule]="schedule2" ></schedule-comparison>
+
+<schedule *ngIf="schedule1" [schedule]="schedule1"></schedule><schedule *ngIf="schedule2" [schedule]="schedule2"></schedule>

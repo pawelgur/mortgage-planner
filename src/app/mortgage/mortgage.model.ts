@@ -48,7 +48,7 @@ export interface Schedule {
     type: ScheduleType;
     changes: CoverChange[];
     extraCharges: number; // todo: consider having name-value pairs
-    coverPenaltyValue: number; // extra charge for every cover payment, percentage
+    coverPenalty: number; // extra charge for every cover payment, percentage
 }
 
 /**
